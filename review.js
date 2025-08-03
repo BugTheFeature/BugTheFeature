@@ -1,60 +1,57 @@
-let currentPassword = "Admin";
+import { db } from './firebase.js';
+import {
+  collection, getDocs, updateDoc, doc, deleteDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-function login() {
-  const input = document.getElementById("adminPassword").value;
-  db.ref("settings/admin_password").once("value", snap => {
-    currentPassword = snap.val() || "Admin";
-    if (input === currentPassword) {
-      document.getElementById("adminPanel").style.display = "block";
-      document.getElementById("loginBox").style.display = "none";
-      loadNames();
-    } else {
-      alert("Falsches Passwort!");
-    }
-  });
-}
+let password = localStorage.getItem("adminPassword") || "Admin";
 
-function loadNames() {
-  const list = document.getElementById("nameList");
-  list.innerHTML = "";
-  db.ref("unsure_names").once("value", snap => {
-    snap.forEach(child => {
-      const entry = child.val();
-      if (entry.status === "pending") {
-        const li = document.createElement("li");
-        li.textContent = entry.name + " ";
-        const yes = document.createElement("button");
-        yes.textContent = "✅";
-        yes.onclick = () => review(child.key, entry.name, "approved");
-        const no = document.createElement("button");
-        no.textContent = "❌";
-        no.onclick = () => review(child.key, entry.name, "denied");
-        li.appendChild(yes);
-        li.appendChild(no);
-        list.appendChild(li);
-      }
-    });
-  });
-}
+document.getElementById("loginButton").addEventListener("click", async () => {
+  const entered = document.getElementById("adminPassword").value;
+  if (entered === password) {
+    document.getElementById("adminPanel").style.display = "block";
+    document.getElementById("loginSection").style.display = "none";
+    loadNames();
+  } else {
+    alert("Falsches Passwort.");
+  }
+});
 
-function review(key, name, result) {
-  db.ref("reviewed_names/" + key).set({
-    name: name,
-    result: result,
-    reviewed_by: "Admin",
-    reviewed_at: new Date().toISOString()
-  });
-  db.ref("unsure_names/" + key).update({ status: result });
-  loadNames();
-}
-
-function changePassword() {
-  const code = document.getElementById("maintenanceCode").value;
-  const newPw = document.getElementById("newPassword").value;
+document.getElementById("changePass").addEventListener("click", () => {
+  const code = document.getElementById("codeInput").value;
+  const newPass = document.getElementById("newPass").value;
   if (code === "Lili liebt es Ausbilder AVs zu machen") {
-    db.ref("settings").update({ admin_password: newPw });
+    localStorage.setItem("adminPassword", newPass);
+    password = newPass;
     alert("Passwort geändert.");
   } else {
-    alert("Falscher Wartungscode!");
+    alert("Falscher Wartungscode.");
   }
+});
+
+async function loadNames() {
+  const query = await getDocs(collection(db, "unsichere_namen"));
+  const list = document.getElementById("nameList");
+  list.innerHTML = "";
+
+  query.forEach(docSnap => {
+    const li = document.createElement("li");
+    li.textContent = docSnap.data().name;
+    const yes = document.createElement("button");
+    const no = document.createElement("button");
+    yes.textContent = "✅";
+    no.textContent = "❌";
+
+    yes.onclick = async () => {
+      await updateDoc(doc(db, "unsichere_namen", docSnap.id), { status: "akzeptiert" });
+      li.remove();
+    };
+    no.onclick = async () => {
+      await deleteDoc(doc(db, "unsichere_namen", docSnap.id));
+      li.remove();
+    };
+
+    li.appendChild(yes);
+    li.appendChild(no);
+    list.appendChild(li);
+  });
 }
