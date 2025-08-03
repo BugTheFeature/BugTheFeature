@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Adminbereich – Klonnamenprüfung</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"></script>
+  <script src="firebase.js" defer></script>
+  <script src="review.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Adminbereich</h1>
+    <div id="loginBox">
+      <input type="password" id="adminPassword" placeholder="Passwort eingeben">
+      <button onclick="login()">Einloggen</button>
+    </div>
+    <div id="adminPanel" style="display:none;">
+      <h3>Unsichere Namen zur Überprüfung</h3>
+      <ul id="nameList"></ul>
+      <h4>Passwort ändern</h4>
+      <input type="text" id="maintenanceCode" placeholder="Wartungscode eingeben">
+      <input type="password" id="newPassword" placeholder="Neues Passwort">
+      <button onclick="changePassword()">Ändern</button>
+    </div>
+  </div>
+</body>
+</html>
