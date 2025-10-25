@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video</title>
+  <title>Halloween Feed</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       background: black;
+      overflow: hidden;
+      height: 100%;
     }
     video {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -19,10 +23,34 @@
   </style>
 </head>
 <body>
-  <video autoplay muted loop playsinline>
-    <source src="video.mp4" type="video/mp4">
-    Dein Browser unterstützt keine HTML5-Videos.
+  <video id="v" autoplay playsinline loop>
+    <source src="Halloween_Terminal_Feed.mov" type="video/quicktime">
+    Dein Browser unterstützt das .mov-Format nicht.
   </video>
+
+  <script>
+    const v = document.getElementById("v");
+
+    async function startVideo() {
+      try {
+        await v.play();
+        if (v.requestFullscreen) {
+          await v.requestFullscreen();
+        } else if (v.webkitRequestFullscreen) {
+          await v.webkitRequestFullscreen();
+        } else if (v.msRequestFullscreen) {
+          await v.msRequestFullscreen();
+        }
+      } catch (e) {
+        console.log("Autoplay mit Ton blockiert. Versuche Fullscreen...");
+        if (v.requestFullscreen) {
+          await v.requestFullscreen();
+        }
+        await v.play().catch(()=>{});
+      }
+    }
+
+    window.onload = startVideo;
+  </script>
 </body>
 </html>
-
