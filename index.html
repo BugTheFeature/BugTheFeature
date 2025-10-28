@@ -38,26 +38,24 @@
 </style>
 </head>
 <body>
-  <video id="feed" playsinline muted autoplay preload="auto" disablePictureInPicture>
-    <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
+  <video id="feed" playsinline autoplay muted preload="auto" loop disablePictureInPicture>
+    <source src="Halloween_Terminal_Feed.webm" type="video/webm">
     Dein Browser unterstützt das Videoformat nicht.
   </video>
 
-  <div id="overlay">🎃 Klicke, um den Feed zu starten</div>
+  <div id="overlay">🎃 Klicke, um den Ton zu aktivieren</div>
 
   <script>
     const video = document.getElementById('feed');
     const overlay = document.getElementById('overlay');
 
-    // Stumm automatisch abspielen
+    // Autoplay stumm starten
     video.muted = true;
     video.play().catch(err => console.log('Autoplay stumm gestartet:', err));
 
     overlay.addEventListener('click', () => {
       overlay.style.display = 'none';   // Overlay ausblenden
-
-      // Nur Ton aktivieren, Video läuft schon
-      video.muted = false;
+      video.muted = false;              // Ton aktivieren
     });
   </script>
 </body>
