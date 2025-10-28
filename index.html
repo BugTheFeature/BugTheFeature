@@ -38,7 +38,7 @@
 </style>
 </head>
 <body>
-  <video id="feed" playsinline>
+  <video id="feed" playsinline muted preload="auto" disablePictureInPicture>
     <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
     Dein Browser unterstützt das Videoformat nicht.
   </video>
@@ -49,11 +49,14 @@
     const video = document.getElementById('feed');
     const overlay = document.getElementById('overlay');
 
+    // Video stumm automatisch starten (vermeidet Blackscreen)
+    video.play().catch(err => console.log('Autoplay stumm, OK:', err));
+
     overlay.addEventListener('click', async () => {
-      overlay.style.display = 'none';   // Overlay ausblenden
-      video.muted = false;              // Ton aktivieren
+      overlay.style.display = 'none';
+      video.muted = false; // Ton aktivieren
       try {
-        await video.play();             // Video starten
+        await video.play(); // Video starten oder fortsetzen
       } catch(err) {
         console.error('Fehler beim Starten des Videos:', err);
       }
