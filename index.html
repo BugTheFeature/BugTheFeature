@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Halloween Terminal Feed</title>
   <style>
     html, body {
@@ -23,22 +23,32 @@
   </style>
 </head>
 <body>
-  <video id="halloweenVideo" autoplay muted playsinline>
+  <video id="feed" playsinline>
     <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
-    Dein Browser unterstützt das Videoformat nicht.
   </video>
 
   <script>
-    const video = document.getElementById('halloweenVideo');
+    const video = document.getElementById('feed');
 
-    video.play().then(() => {
-      // Versuch, nach 1 Sekunde Ton einzuschalten
-      setTimeout(() => {
-        video.muted = false;
-      }, 1000);
-    }).catch(err => {
-      console.log("Autoplay blockiert:", err);
+    function startVideo() {
+      video.muted = false;
+      video.play().catch(() => {
+        // Fallback falls Autoplay komplett blockiert ist
+        video.muted = true;
+        video.play();
+      });
+    }
+
+    // Simulierter "Klick" für Chromium
+    window.addEventListener('load', () => {
+      // Erzeuge kurzzeitig ein Click-Event
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
+      window.dispatchEvent(event);
+      startVideo();
     });
+
+    // Wenn Benutzer wirklich klickt (manchmal nötig)
+    document.addEventListener('click', startVideo);
   </script>
 </body>
 </html>
