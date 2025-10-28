@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Halloween Terminal Feed</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
       height: 100%;
       background: black;
+      overflow: hidden;
+      cursor: pointer;
     }
     video {
-      position: fixed;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #hint {
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      font-family: monospace;
+      letter-spacing: 2px;
     }
   </style>
 </head>
@@ -26,29 +39,21 @@
   <video id="feed" playsinline>
     <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
   </video>
+  <div id="hint">🎃 KLICKE, UM DEN FEED ZU STARTEN</div>
 
   <script>
     const video = document.getElementById('feed');
+    const hint = document.getElementById('hint');
 
-    function startVideo() {
-      video.muted = false;
-      video.play().catch(() => {
-        // Fallback falls Autoplay komplett blockiert ist
-        video.muted = true;
-        video.play();
-      });
-    }
-
-    // Simulierter "Klick" für Chromium
-    window.addEventListener('load', () => {
-      // Erzeuge kurzzeitig ein Click-Event
-      const event = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
-      window.dispatchEvent(event);
-      startVideo();
+    hint.addEventListener('click', async () => {
+      hint.style.display = 'none';
+      try {
+        video.muted = false;
+        await video.play();
+      } catch (err) {
+        console.error('Fehler beim Start:', err);
+      }
     });
-
-    // Wenn Benutzer wirklich klickt (manchmal nötig)
-    document.addEventListener('click', startVideo);
   </script>
 </body>
 </html>
