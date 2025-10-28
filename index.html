@@ -18,20 +18,23 @@
       height: 100%;
       object-fit: cover;
     }
-    #hint {
+    #hint, #endOverlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.6);
-      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 2em;
       font-family: monospace;
       letter-spacing: 2px;
+      color: white;
+      background: rgba(0,0,0,0.6);
+    }
+    #endOverlay {
+      display: none;
     }
   </style>
 </head>
@@ -40,19 +43,26 @@
     <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
   </video>
   <div id="hint">🎃 KLICKE, UM DEN FEED ZU STARTEN</div>
+  <div id="endOverlay">🕯️ Ende</div>
 
   <script>
     const video = document.getElementById('feed');
     const hint = document.getElementById('hint');
+    const endOverlay = document.getElementById('endOverlay');
 
     hint.addEventListener('click', async () => {
       hint.style.display = 'none';
+      video.muted = false;
       try {
-        video.muted = false;
         await video.play();
       } catch (err) {
         console.error('Fehler beim Start:', err);
       }
+    });
+
+    // Am Ende des Videos Overlay einblenden
+    video.addEventListener('ended', () => {
+      endOverlay.style.display = 'flex';
     });
   </script>
 </body>
