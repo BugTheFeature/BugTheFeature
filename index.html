@@ -1,68 +1,62 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Halloween Terminal Feed</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: black;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    #hint, #endOverlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2em;
-      font-family: monospace;
-      letter-spacing: 2px;
-      color: white;
-      background: rgba(0,0,0,0.6);
-    }
-    #endOverlay {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halloween Terminal Feed</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    font-family: monospace;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
   <video id="feed" playsinline>
     <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
+    Dein Browser unterstützt das Videoformat nicht.
   </video>
-  <div id="hint">🎃 KLICKE, UM DEN FEED ZU STARTEN</div>
-  <div id="endOverlay">🕯️ Ende</div>
+
+  <div id="overlay">🎃 Klicke, um den Feed zu starten</div>
 
   <script>
     const video = document.getElementById('feed');
-    const hint = document.getElementById('hint');
-    const endOverlay = document.getElementById('endOverlay');
+    const overlay = document.getElementById('overlay');
 
-    hint.addEventListener('click', async () => {
-      hint.style.display = 'none';
-      video.muted = false;
+    overlay.addEventListener('click', async () => {
+      overlay.style.display = 'none';   // Overlay ausblenden
+      video.muted = false;              // Ton aktivieren
       try {
-        await video.play();
-      } catch (err) {
-        console.error('Fehler beim Start:', err);
+        await video.play();             // Video starten
+      } catch(err) {
+        console.error('Fehler beim Starten des Videos:', err);
       }
-    });
-
-    // Am Ende des Videos Overlay einblenden
-    video.addEventListener('ended', () => {
-      endOverlay.style.display = 'flex';
     });
   </script>
 </body>
