@@ -11,6 +11,7 @@
       background: black;
       overflow: hidden;
       height: 100%;
+      cursor: pointer;
     }
     video {
       position: fixed;
@@ -20,37 +21,45 @@
       height: 100%;
       object-fit: cover;
     }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      font-family: sans-serif;
+      transition: opacity 0.4s;
+    }
   </style>
 </head>
 <body>
-  <video id="v" autoplay playsinline loop>
-    <source src="Halloween_Terminal_Feed.mp4" type="video/quicktime">
-    Dein Browser unterstützt das .mov-Format nicht.
+  <video id="v" autoplay muted loop playsinline>
+    <source src="Halloween_Terminal_Feed.mp4" type="video/mp4">
   </video>
 
+  <div id="overlay">🔊 Klick zum Einschalten des Tons</div>
+
   <script>
-    const v = document.getElementById("v");
+    const v = document.getElementById('v');
+    const overlay = document.getElementById('overlay');
 
-    async function startVideo() {
+    // Beim Klick Ton aktivieren
+    overlay.addEventListener('click', async () => {
       try {
+        v.muted = false;
         await v.play();
-        if (v.requestFullscreen) {
-          await v.requestFullscreen();
-        } else if (v.webkitRequestFullscreen) {
-          await v.webkitRequestFullscreen();
-        } else if (v.msRequestFullscreen) {
-          await v.msRequestFullscreen();
-        }
-      } catch (e) {
-        console.log("Autoplay mit Ton blockiert. Versuche Fullscreen...");
-        if (v.requestFullscreen) {
-          await v.requestFullscreen();
-        }
-        await v.play().catch(()=>{});
+        overlay.style.opacity = 0;
+        setTimeout(() => overlay.remove(), 400);
+      } catch (err) {
+        console.warn('Ton konnte nicht aktiviert werden:', err);
       }
-    }
-
-    window.onload = startVideo;
+    });
   </script>
 </body>
 </html>
